@@ -12,7 +12,7 @@ class PagoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -86,13 +86,14 @@ class PagoController extends Controller
         // $hora = $now->format('d-M-Y H:i:s');
         $hora = $now->format('y/m/d');
 
-
       //variables
       $abono = $request->abono;
       $deuda = $request->deuda;
       $nueva_deuda = $deuda - $abono;
 
       $porcen = auth()->user()->porcent_id;
+      // echo 'Porcentaje';
+      // echo $porcen;
 
       // return $request->all();
       //Actualizar valor en tabla cliente
@@ -103,7 +104,7 @@ class PagoController extends Controller
       $flight->save();
 
       $pago = Pago::create([
-        'nombre' => $request->nombre,
+        'name' => $request->name,
         'cliente_id' => $request->cliente_id,
         'deuda' => $nueva_deuda,
         'prestamo' => $request->prestamo,
@@ -126,7 +127,10 @@ class PagoController extends Controller
         'pago_empleado' => $ganancia_em,
       ]);
 
-      return redirect()->route('control.index');
+      // return redirect()->route('control.index');
+      return response()->json([
+        'mensaje' => 'Se verifico el pago conforme'
+      ]);
 
       //agregar registro para el control de usuarios
       // $pago = Pago::create($request->all());
