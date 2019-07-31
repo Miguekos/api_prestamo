@@ -40,7 +40,7 @@ Route::get('limpiarClientes/{id}', 'ClienteController@limpiarClientes')->name('l
 Route::patch('limpiar_cliente/{id}', 'ControlController@limpiar_cliente')->name('limpiar_cliente');
 
 //Cierre
-Route::get('cierre', 'CierreController@index')->name('cierre');
+Route::get('cierre/{id}/{porcent_id}', 'CierreController@getCierre')->name('cierre');
 Route::post('cierre', 'CierreController@store')->name('cierre.store');
 Route::get('cierre/{monto}/edit', 'CierreController@edit')->name('cierre.edit');
 Route::patch('cierre/{monto}', 'CierreController@update')->name('cierre.update');

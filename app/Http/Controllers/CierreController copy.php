@@ -16,9 +16,9 @@ class CierreController extends Controller
       // $this->middleware('auth');
   }
 
-    public function getCierre($id, $porcent_id)
+    public function index()
     {
-      $id = $id;
+      $id = auth()->user()->id;
       $horaS = Report::where('usuario_id',$id)->orderBy('created_at','desc')->first();
 
       if ($horaS) {
@@ -28,13 +28,13 @@ class CierreController extends Controller
         $ultimafecha = date('Y-m-d', strtotime('-1 week'));
       }
 
-      $id = $id;
+      $id = auth()->user()->id;
       $recaudado= Pago::where([
         ['user_id', '=', $id],
         ['a_caja', '=', 'Si'],
         ['created_at', '>', $ultimafecha],
         ])->sum('abono');
-        $porcent = $porcent_id;
+        $porcent = auth()->user()->porcent_id;
         $porce = $porcent / 100;
         $ganancia = $porce * $recaudado;
         // $entregar1 = $recaudado - $ganancia;
@@ -42,23 +42,23 @@ class CierreController extends Controller
 
       //Deposito
           $inicio = Cierre::where([
-            ['user_id', '=', $id],
+            ['user_id', '=', auth()->user()->id],
             ['accion', '=', 'deposito'],
             ['created_at', '>', $ultimafecha],
             ])->get();
           $inicio_suma = Cierre::where([
-            ['user_id', '=', $id],
+            ['user_id', '=', auth()->user()->id],
             ['accion', '=', 'deposito'],
             ['created_at', '>', $ultimafecha],
           ])->sum('monto');
       //Retiro
           $fin = Cierre::where([
-            ['user_id', '=', $id],
+            ['user_id', '=', auth()->user()->id],
             ['accion', '=', 'retiro'],
             ['created_at', '>', $ultimafecha],
             ])->get();
           $fin_resta = Cierre::where([
-            ['user_id', '=', $id],
+            ['user_id', '=', auth()->user()->id],
             ['accion', '=', 'retiro'],
             ['created_at', '>', $ultimafecha],
           ])->sum('monto');
@@ -67,20 +67,10 @@ class CierreController extends Controller
             $entregar = round($entregar2 - $fin_resta);
 
 
-        $reporte = Report::where('usuario_id',$id)->get();
+        $reporte = Report::where('usuario_id',auth()->user()->id)->get();
         
 
-          // return view('cierre.index',compact('inicio','inicio_suma','fin','fin_resta','recaudado','ganancia','entregar','reporte','recaudado_t'));
-          return response()->json([
-            'inicio' => $inicio,
-            'inicio_suma' => $inicio_suma,
-            'fin' => $fin,
-            'fin_resta' => $fin_resta,
-            'recaudado' => $recaudado,
-            'ganancia' => $ganancia,
-            'entregar' => $entregar,
-            'reporte' => $reporte,
-          ]);
+          return view('cierre.index',compact('inicio','inicio_suma','fin','fin_resta','recaudado','ganancia','entregar','reporte','recaudado_t'));
     }
 
     public function store(Request $request)
