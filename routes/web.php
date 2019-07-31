@@ -19,6 +19,13 @@ Route::get('pendiente', 'DashboardController@pendiente')->name('pendiente');
 //Usuarios
 Route::resource('user','UserController');
 
+// API
+Route::get('getControl/{id}', 'ControlController@getControl')->name('getControl');
+
+
+Route::get('getPagos/{id}/{porcent}', 'PagoController@getPagos')->name('getPagos');
+
+
 //prestamos
 Route::resource('cliente','ClienteController');
 Route::resource('control','ControlController');
@@ -27,10 +34,10 @@ Route::resource('report','ReportController');
 
 Route::delete('eliminarcontrol/{monto}', 'DashboardController@eliminarcontrol')->name('eliminarcontrol.destroy');
 
-Route::get('limpiarClientes', 'ClienteController@limpiarClientes')->name('limpiarClientes');
+Route::get('limpiarClientes/{id}', 'ClienteController@limpiarClientes')->name('limpiarClientes');
 
 //Limpiar los clientes que ya depositaron
-Route::patch('limpiar_cliente', 'ControlController@limpiar_cliente')->name('limpiar_cliente');
+Route::patch('limpiar_cliente/{id}', 'ControlController@limpiar_cliente')->name('limpiar_cliente');
 
 //Cierre
 Route::get('cierre', 'CierreController@index')->name('cierre');

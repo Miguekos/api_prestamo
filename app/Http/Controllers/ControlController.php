@@ -49,6 +49,35 @@ class ControlController extends Controller
     //   return view('controls.index',compact('control','cliente','hora','abonos'));
     }
 
+    public function getControl($id)
+    {
+      $now = new DateTime('America/Lima');
+      // $hora = $now->format('d-M-Y H:i:s');
+      $hora = $now->format('y/m/d H:i:s');
+    //   $id = auth()->user()->id;
+      $cliente = Cliente::where([
+        ['agregado_id','=',$id],
+        // ['updated_at', '<', date('Y-m-d')],
+        ['abono_id','=',0],
+        ['deuda','!=',0],
+      ])->latest()->limit(2000)->get();
+
+      $abonos = Cliente::where([
+        ['agregado_id','=',$id],
+        // ['updated_at', '>', date('Y-m-d')],
+        ['abono_id','=',1],
+      ])->latest()->limit(2000)->get();
+      // return $abonos;
+      $control = Control::where('id',$id)->latest()->limit(2000)->get();
+
+      return response()->json([
+        'clientesSinAbonos' => $cliente,
+        'clientesConAbonos' => $abonos
+        ]);
+
+    //   return view('controls.index',compact('control','cliente','hora','abonos'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -133,11 +162,11 @@ class ControlController extends Controller
         ]);
     }
 
-        public function limpiar_cliente()
+        public function limpiar_cliente($id)
     {
 
         Cliente::where('abono_id', 1)
-            ->where('agregado_id',auth()->user()->id)
+            ->where('agregado_id',$id)
             ->update(['abono_id' => 0]);
      
         // return back()->with('success','Se resetearon los depositos correctamente..!!');
