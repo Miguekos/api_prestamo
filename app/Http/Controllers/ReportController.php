@@ -39,7 +39,9 @@ class ReportController extends Controller
     {
       // return $request->all();
       $reporte = Report::create($request->all());
-      return back()->with('flash','Se agrego el cierre correctamente..!!');
+      return response()->json([
+          'reporte' => $reporte
+      ]);
     }
 
     /**

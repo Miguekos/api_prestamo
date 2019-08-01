@@ -73,12 +73,12 @@ class CierreController extends Controller
           // return view('cierre.index',compact('inicio','inicio_suma','fin','fin_resta','recaudado','ganancia','entregar','reporte','recaudado_t'));
           return response()->json([
             'inicio' => $inicio,
-            'inicio_suma' => $inicio_suma,
+            'inicio_suma' => number_format($inicio_suma,2,",","."),
             'fin' => $fin,
-            'fin_resta' => $fin_resta,
-            'recaudado' => $recaudado,
-            'ganancia' => $ganancia,
-            'entregar' => $entregar,
+            'fin_resta' => number_format($fin_resta,2,",","."),
+            'recaudado' => number_format($recaudado,2,",","."),
+            'ganancia' => number_format($ganancia,2,",","."),
+            'entregar' => number_format($entregar,2,",","."),
             'reporte' => $reporte,
           ]);
     }
