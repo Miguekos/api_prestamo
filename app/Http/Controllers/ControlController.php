@@ -141,6 +141,7 @@ class ControlController extends Controller
      */
     public function destroy($control)
     {
+        
         $cliente = Pago::where([
             'cliente_id' => $control,
         ])->first();
