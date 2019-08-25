@@ -2,7 +2,7 @@
 
 
 Route::get('/', 'Auth\LoginController@showLoginForm');
-Route::get('dashboard', 'DashboardController@dashboard')->name('dashboard');
+Route::get('dashboard/{id}/{id_user}', 'DashboardController@dashboard')->name('dashboard');
 Route::get('control_admin', 'DashboardController@control_admin')->name('control_admin');
 Route::get('pago_admin', 'DashboardController@pago_admin')->name('pago_admin');
 

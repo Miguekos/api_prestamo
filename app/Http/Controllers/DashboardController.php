@@ -22,13 +22,33 @@ class DashboardController extends Controller
         // $this->middleware('auth');
     }
 
-    public function dashboard()
+    public function dashboard($id, $id_user)
     {
 
-        $id_user = Auth::user()->user_id;
-        $id = Auth::user()->id;
-        $barber_id = Auth::user()->barber_id;
+        // $id_user = Auth::user()->user_id;
+        // $id = Auth::user()->id;
+        // $barber_id = Auth::user()->barber_id;
+        $semana = date('Y-m-d H:i:s', strtotime('-1 week'));
+        $dia = date('Y-m-d H:i:s');
+        if ($id_user == 1){
+          $totalColaboladores = DB::table('clientes')
+             ->select('agregado','agregado_id', DB::raw('sum(deuda) as deuda'))
+             ->where('deuda','>','0')
+             ->where('updated_at','<',$dia)
+             ->groupBy('agregado','agregado_id')
+            //  ->limit(1000)
+             ->get();
+        } else { 
+          $totalColaboladores = null;
+        }
 
+        $clientPenditesSemana = DB::table('clientes')
+             ->select('agregado','agregado_id', 'nombre')
+             ->where('deuda','>','0')
+             ->whereBetween('updated_at',[$dia,$semana])
+             ->groupBy('agregado','agregado_id', 'nombre')
+            //  ->limit(1000)
+             ->get();
         // $inicio = Cierre::where('user_id',$id)->orderBy('id','desc')->first();
         //
         // if ($inicio){
@@ -62,7 +82,22 @@ class DashboardController extends Controller
         $total_d = Cliente::all()->sum('deuda');
         $total_dt = Cliente::where('deuda', '>', 0)->count('id');
 
-        return view('dashboard',compact('rol','barber','total_r','total_c','total_u','total_d','total_dt','calc1','calc2'));
+        return response()->json([
+          'totalColaboladores' => $totalColaboladores,
+          'rol' => $rol,
+          'semana' => $semana,
+          'dia' => $dia,
+          'clientPenditesSemana' => $clientPenditesSemana,
+          // 'barber' => $barber,
+          'total_r' => number_format($total_r,2,",","."),
+          'total_c' => number_format($total_c,2,",","."),
+          'total_u' => number_format($total_u,2,",","."),
+          'total_d' => number_format($total_d,2,",","."),
+          'total_dt' => number_format($total_dt,2,",","."),
+          // 'calc1' => $calc1,
+          // 'calc2' => $calc2
+        ]);
+        // return view('dashboard',compact('rol','barber','total_r','total_c','total_u','total_d','total_dt','calc1','calc2'));
     }
 
 
