@@ -27,6 +27,7 @@ Route::get('getPagos/{id}/{porcent}', 'PagoController@getPagos')->name('getPagos
 
 
 //prestamos
+Route::get('getClienteId/{id}', 'ClienteController@getCliente')->name('getCliente');
 Route::resource('cliente','ClienteController');
 Route::resource('control','ControlController');
 Route::resource('pago','PagoController');

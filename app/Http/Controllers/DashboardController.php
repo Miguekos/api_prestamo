@@ -38,43 +38,23 @@ class DashboardController extends Controller
              ->groupBy('agregado','agregado_id')
             //  ->limit(1000)
              ->get();
+            
+            $clientPenditesSemana = DB::table('clientes')
+            ->select('agregado','agregado_id', 'name')
+            ->where('deuda','>','0')
+            ->whereBetween('updated_at',[$dia,$semana])
+            ->groupBy('agregado','agregado_id', 'name')
+          //  ->limit(1000)
+            ->get();
         } else { 
           $totalColaboladores = null;
+          $clientPenditesSemana = null;
         }
-
-        $clientPenditesSemana = DB::table('clientes')
-             ->select('agregado','agregado_id', 'nombre')
-             ->where('deuda','>','0')
-             ->whereBetween('updated_at',[$dia,$semana])
-             ->groupBy('agregado','agregado_id', 'nombre')
-            //  ->limit(1000)
-             ->get();
-        // $inicio = Cierre::where('user_id',$id)->orderBy('id','desc')->first();
-        //
-        // if ($inicio){
-        //     ])->sum('monto');
-        //   $calc1 = Cierre::where([
-        //     'user_id' => $id,
-        //     'accion' => 'deposito',
-        //   $calc2 = Cierre::where([
-        //     'user_id' => $id,
-        //     'accion' => 'retiro',
-        //     ])->sum('monto');
-        //   $inicio_m = $calc1 - $calc2;
-        // }else{
-        //   $inicio_m = 0;
-        // }
-        // return $inicio->monto;
 
         $roles = Roles::where([
             'id' => $id_user,
         ])->first();
         $rol = $roles->nombre;
-
-        // $barbers = Barber::where([
-        //     'id' => $barber_id,
-        // ])->first();
-        // $barber = $barbers->nombre;
 
         $total_r = Pago::all()->sum('abono');
         $total_c = Cliente::all()->count('id');
@@ -83,17 +63,20 @@ class DashboardController extends Controller
         $total_dt = Cliente::where('deuda', '>', 0)->count('id');
 
         return response()->json([
-          'totalColaboladores' => $totalColaboladores,
-          'rol' => $rol,
-          'semana' => $semana,
-          'dia' => $dia,
+          'totalColaboladores' => $totalColaboladores,          
           'clientPenditesSemana' => $clientPenditesSemana,
+          'detalles' => [
+            'rol' => $rol,
+            'semana' => $semana,
+            'dia' => $dia,
+            'total_r' => number_format($total_r,2,",","."),
+            'total_c' => number_format($total_c,2,",","."),
+            'total_u' => number_format($total_u,2,",","."),
+            'total_d' => number_format($total_d,2,",","."),
+            'total_dt' => number_format($total_dt,2,",","."),
+          ]
           // 'barber' => $barber,
-          'total_r' => number_format($total_r,2,",","."),
-          'total_c' => number_format($total_c,2,",","."),
-          'total_u' => number_format($total_u,2,",","."),
-          'total_d' => number_format($total_d,2,",","."),
-          'total_dt' => number_format($total_dt,2,",","."),
+          // 'totales' => $totales
           // 'calc1' => $calc1,
           // 'calc2' => $calc2
         ]);
