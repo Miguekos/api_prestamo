@@ -8,6 +8,7 @@ class NominaController extends Controller
 {
     public function index()
     {
+        return "asdfasdf";
 
     }
 

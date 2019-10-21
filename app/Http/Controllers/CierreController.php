@@ -16,7 +16,8 @@ class CierreController extends Controller
       // $this->middleware('auth');
   }
 
-    public function getCierre($id, $porcent_id)
+    // public function getCierre($id, $porcent_id)
+    public function index($id, $porcent_id)
     {
       $id = $id;
       $horaS = Report::where('usuario_id',$id)->orderBy('created_at','desc')->first();
@@ -68,18 +69,20 @@ class CierreController extends Controller
 
 
         $reporte = Report::where('usuario_id',$id)->get();
+        // dd($reporte)
         
 
           // return view('cierre.index',compact('inicio','inicio_suma','fin','fin_resta','recaudado','ganancia','entregar','reporte','recaudado_t'));
           return response()->json([
-            'inicio' => $inicio,
-            'inicio_suma' => number_format($inicio_suma,2,",","."),
-            'fin' => $fin,
-            'fin_resta' => number_format($fin_resta,2,",","."),
-            'recaudado' => number_format($recaudado,2,",","."),
-            'ganancia' => number_format($ganancia,2,",","."),
-            'entregar' => number_format($entregar,2,",","."),
-            'reporte' => $reporte,
+            "todobien" => "asd"
+            // 'inicio' => $inicio,
+            // 'inicio_suma' => number_format($inicio_suma,2,",","."),
+            // 'fin' => $fin,
+            // 'fin_resta' => number_format($fin_resta,2,",","."),
+            // 'recaudado' => number_format($recaudado,2,",","."),
+            // 'ganancia' => number_format($ganancia,2,",","."),
+            // 'entregar' => number_format($entregar,2,",","."),
+            // 'reporte' => $reporte,
           ]);
     }
 
